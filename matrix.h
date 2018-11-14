@@ -165,7 +165,7 @@ class Matrix {
 
           result.iterator([&] (int x, int y) -> void {
             result.set(x, y, (*this)(x, y) + other(x, y));
-          }, 'n');
+          });
 
           return result;
         }
@@ -178,7 +178,7 @@ class Matrix {
 
           result.iterator([&] (int x, int y) -> void {
             result.set(x, y, (*this)(x, y) - other(x, y));
-          }, 'n');
+          });
 
           return result;
         }
@@ -222,17 +222,27 @@ class Matrix {
           return *this;
         }
         void clear() {
+          // cout << "  Clear begin" << endl;
           Node <T> *current = this->hColumns, *prev = this->hRows;
 
           while (current) {
-            prev->killSelf();
+            // cout << "  Clear loop" << endl;
+            if (prev) {
+              prev->killSelf();
+            }
+
             prev = current;
             current = current->next;
           }
 
+          // cout << "  Clear prev" << endl;
+
           if (prev) {
+            // cout << "  Clear prevKill" << endl;
             prev->killSelf();
+            // cout << "  Clear prevPostKill" << endl;
           }
+          // cout << "  Clear end" << endl;
         }
 
         void print() {
@@ -291,7 +301,9 @@ class Matrix {
         }
 
         ~Matrix() {
+          // cout << "Begin " << this << endl;
           this->clear();
+          // cout << "End " << this << endl;
         }
 };
 
