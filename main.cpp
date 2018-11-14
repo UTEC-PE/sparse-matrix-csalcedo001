@@ -1,51 +1,62 @@
 #include <iostream>
 
 #include "matrix.h"
+#include <random>
+#include <chrono>
 
 #define WIDTH 2
-#define HEIGHT 3
+#define HEIGHT 2
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
     Matrix<int> a(WIDTH, HEIGHT), b(HEIGHT, WIDTH);
 
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    default_random_engine generator(seed);
+
+    uniform_int_distribution<int> distribution(0, 5);
+
     a.iterator([&] (int x, int y) -> void {
       cout << a(x, y) << endl;
     }, 'n', 'd');
 
-    a.iterator([&a] (int x, int y) {
-      a.set(x, y, x + y * WIDTH);
+    a.iterator([&] (int x, int y) {
+      if (x % 2 || y % 2)
+        a.set(x, y, distribution(generator));
     });
-    b.iterator([&b] (int x, int y) {
-      b.set(x, y, x + y * HEIGHT);
+    b.iterator([&] (int x, int y) {
+      if (x % 2 || y % 2)
+        b.set(x, y, distribution(generator));
     });
+
+    cout << "a =" << endl;
 
     a.print();
+
+    cout << "b =" << endl;
+
     b.print();
 
-    Matrix<int> c;
-    c = a * b;
+    cout << "a\' =" << endl;
 
-    c.print();
+    a.transposed().print();
 
-    c = c * 4;
+    cout << "a * 10 =" << endl;
 
-    c.print();
+    (a * 10).print();
 
-    Matrix<int> d = c;
+    cout << "a' + b =" << endl;
 
-    d = c + c + c;
+    (a.transposed() + b).print();
 
-    d.print();
+    cout << "a' - b =" << endl;
 
-    d = d - c;
+    (a.transposed() - b).print();
 
-    d.print();
+    cout << "a * b =" << endl;
 
-    d = d.transposed();
-
-    d.print();
+    (a * b).print();
 
     cout << endl << endl;
 
