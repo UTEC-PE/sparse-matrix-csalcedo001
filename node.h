@@ -15,12 +15,9 @@ public:
     Node <T> (int x, int y, T data) : data(data), x(x), y(y), next(nullptr), down(nullptr) {};
 
     void killSelf() {
-      // cout << "    killSelf " << this << endl;
       if (down) {
-        // cout << "    killSelfTrue " << this << endl;
         down->killSelf();
       }
-      // cout << "    killSelf delete " << this << endl;
 
       delete this;
     }

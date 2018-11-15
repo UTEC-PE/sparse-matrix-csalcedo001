@@ -17,17 +17,11 @@ int main(int argc, char *argv[]) {
 
     uniform_int_distribution<int> distribution(0, 5);
 
-    a.iterator([&] (int x, int y) -> void {
-      cout << a(x, y) << endl;
-    }, 'n', 'd');
-
     a.iterator([&] (int x, int y) {
-      if (x % 2 || y % 2)
-        a.set(x, y, distribution(generator));
+      a.set(x, y, distribution(generator));
     });
     b.iterator([&] (int x, int y) {
-      if (x % 2 || y % 2)
-        b.set(x, y, distribution(generator));
+      b.set(x, y, distribution(generator));
     });
 
     cout << "a =" << endl;
