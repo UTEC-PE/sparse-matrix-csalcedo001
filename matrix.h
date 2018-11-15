@@ -35,7 +35,7 @@ class Matrix {
           }
         }
         Matrix(Matrix<T> &other) : Matrix(other.columns, other.rows) {
-          this->iterator([&] (int x, int y) {
+          other.iterator([&] (int x, int y) {
             this->set(x, y, other(x, y));
           });
         };
@@ -53,9 +53,11 @@ class Matrix {
 
           current = &((*current)->down);
 
+
           while (*current && (*current)->y < y) {
             current = &((*current)->down);
           }
+
 
 
 
@@ -138,9 +140,13 @@ class Matrix {
           Matrix<T> result(other.columns, this->rows);
 
           result.iterator([&] (int x, int y) {
+            int sum = 0;
+
             for (int i = 0; i < this->columns; i++) {
-              result.set(x, y, (*this)(i, y) * other(x, i));
+              sum += (*this)(i, y) * other(x, i);
             }
+
+            result.set(x, y, sum);
           });
 
           return result;
@@ -187,7 +193,7 @@ class Matrix {
 
           iterator([&] (int x, int y) -> void {
             result.set(y, x, (*this)(x, y));
-          }, 'n');
+          });
 
           return result;
         }
@@ -222,11 +228,9 @@ class Matrix {
           return *this;
         }
         void clear() {
-          // cout << "  Clear begin" << endl;
           Node <T> *current = this->hColumns, *prev = this->hRows;
 
           while (current) {
-            // cout << "  Clear loop" << endl;
             if (prev) {
               prev->killSelf();
             }
@@ -235,14 +239,10 @@ class Matrix {
             current = current->next;
           }
 
-          // cout << "  Clear prev" << endl;
 
           if (prev) {
-            // cout << "  Clear prevKill" << endl;
             prev->killSelf();
-            // cout << "  Clear prevPostKill" << endl;
           }
-          // cout << "  Clear end" << endl;
         }
 
         void print() {
@@ -257,8 +257,6 @@ class Matrix {
 
             cout << " |" << endl;
           }
-
-          cout << endl;
         }
         void iterator(function <void (int, int)> step = [] (int x, int y) -> void {},
                       char mode = 'f',
@@ -301,9 +299,7 @@ class Matrix {
         }
 
         ~Matrix() {
-          // cout << "Begin " << this << endl;
           this->clear();
-          // cout << "End " << this << endl;
         }
 };
 
